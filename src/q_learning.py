@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from typing import List
+import random
 import gym
 
 
@@ -60,8 +61,21 @@ def update_q_value(q_table: np.ndarray, state: int, action: int,
                                          discount_rate)
 
 
+def choose_action(q_table: np.ndarray, state: int,
+                  exploration_rate: float) -> int:
+    """Returns an action considering the exploration/exploitation tradeoff"""
+    random_value: float = random.uniform(0, 1)
+    action: int
+    if random_value > exploration_rate:
+        action = best_action(q_table, state)
+    else:
+        num_actions: int = q_table.shape[1]
+        action = random.randint(0, num_actions-1)
+    return action
+
+
 def q_learning(num_iterations: int, learning_rate: float,
-               discount_rate: float, string_env: str,
+               discount_rate: float, exploration_rate: float, string_env: str,
                save_path: str = None) -> np.ndarray:
     """Train and update the q_table"""
     env = gym.make(string_env)
@@ -72,11 +86,13 @@ def q_learning(num_iterations: int, learning_rate: float,
 
     total_rewards = []
     for i in range(num_iterations):
-        action = env.action_space.sample()
+        action = choose_action(q_table, state, exploration_rate)
+        print(action)
         new_state, reward, done, info = env.step(action)
         update_q_value(q_table, state, action, learning_rate, reward, new_state,
                        discount_rate)
         print(i/num_iterations)
+
         if done == True:
             new_state = env.reset()
             current_reward = run_with_best_action(q_table, string_env)
