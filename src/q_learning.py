@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from typing import List
 import random
 import gym
@@ -74,9 +73,20 @@ def choose_action(q_table: np.ndarray, state: int,
     return action
 
 
+def reduce_exploration_rate(exploration_rate: float,
+                            min_exploration_rate: float,
+                            exploration_rate_decay: float) -> float:
+    """Uses exponential decay to reduce the exploration rate"""
+    multiplier = np.exp(-exploration_rate_decay)
+    result = min_exploration_rate
+    result += (exploration_rate - min_exploration_rate)*multiplier
+    return result
+
+
 def q_learning(num_iterations: int, learning_rate: float,
-               discount_rate: float, exploration_rate: float, string_env: str,
-               save_path: str = None) -> np.ndarray:
+               discount_rate: float, exploration_rate: float,
+               min_exploration_rate: float, exploration_rate_decay: float,
+               string_env: str, save_path: str = None) -> np.ndarray:
     """Train and update the q_table"""
     env = gym.make(string_env)
     state = env.reset()
@@ -87,16 +97,18 @@ def q_learning(num_iterations: int, learning_rate: float,
     total_rewards = []
     for i in range(num_iterations):
         action = choose_action(q_table, state, exploration_rate)
-        print(action)
+
         new_state, reward, done, info = env.step(action)
         update_q_value(q_table, state, action, learning_rate, reward, new_state,
                        discount_rate)
-        print(i/num_iterations)
 
         if done == True:
             new_state = env.reset()
             current_reward = run_with_best_action(q_table, string_env)
             total_rewards.append(current_reward)
+            exploration_rate = reduce_exploration_rate(exploration_rate,
+                                                       min_exploration_rate,
+                                                       exploration_rate_decay)
 
         state = new_state
 
