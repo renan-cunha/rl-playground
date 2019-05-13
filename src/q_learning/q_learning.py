@@ -63,12 +63,11 @@ def update_q_value(q_table: np.ndarray, state: int, action: int,
 def choose_action(q_table: np.ndarray, state: int,
                   exploration_rate: float) -> int:
     """Returns an action considering the exploration/exploitation tradeoff"""
-    random_value: float = random.uniform(0, 1)
-    action: int
+    random_value = random.uniform(0, 1)
     if random_value > exploration_rate:
         action = best_action(q_table, state)
     else:
-        num_actions: int = q_table.shape[1]
+        num_actions = q_table.shape[1]
         action = random.randint(0, num_actions-1)
     return action
 
