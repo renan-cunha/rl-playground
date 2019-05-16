@@ -1,5 +1,5 @@
 import pytest
-import q_learning_taxi
+import main
 import numpy as np
 
 
@@ -11,6 +11,6 @@ import numpy as np
 ])
 def test_max_expected_future_reward(list, line, cols_list, expected):
     q_table = np.array(list)
-    result = q_learning_taxi.max_expected_future_reward(q_table, line,
-                                                        cols_list)
+    result = main.max_expected_future_reward(q_table, line,
+                                             cols_list)
     assert result == expected
