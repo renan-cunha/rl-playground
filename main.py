@@ -1,5 +1,5 @@
 import gym
-from src.deep_q_learning import dnn_factory
+from src import dnn_factory
 from src.deep_q_learning import dqn
 import matplotlib.pyplot as plt
 
@@ -23,7 +23,9 @@ if __name__ == "__main__":
                                    num_hidden_neurons=num_hidden_neurons,
                                    num_hidden_layers=num_hidden_layers,
                                    output_length=num_actions,
-                                   learning_rate=learning_rate)
+                                   learning_rate=learning_rate,
+                                   loss="mse",
+                                   output_layer_actionvation_function="linear")
 
     dqn_agent = dqn.dqn(env=env, model=model,
                         exploration_rate=exploration_rate,
