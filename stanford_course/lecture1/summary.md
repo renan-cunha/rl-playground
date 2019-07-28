@@ -48,5 +48,3 @@ it always played the move that brought it to the position that it rated the best
 learn to play better, or worse, than a nongreedy player? What problems might occur?
     * **My answer**: We can learn better than him, since a greedy strategy can yield a
       suboptimal solution.
-
-
