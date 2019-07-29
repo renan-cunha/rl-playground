@@ -34,17 +34,17 @@ class MarsRover():
 
 
 def monte_carlo(rover: MarsRover, state: int, time: int,
-                episodes: int, 
+                episodes: int,
                 gamma: float) -> Tuple[float, float, float]:
     """Return value function of environment using monte carlo
     simulation"""
     rewards = []
 
     for i in range(episodes):
-       
+
         rover.reset(state)
         current_reward = rover.rewards[state]
-       
+
         for j in range(time):
             # episode
             new_state = rover.new_random_state()
@@ -52,7 +52,7 @@ def monte_carlo(rover: MarsRover, state: int, time: int,
             current_reward = current_reward + reward*gamma**(j+1)
 
         rewards.append(current_reward)
-   
+
     rewards = np.array(rewards)
     return rewards.mean(), max(rewards), min(rewards)
 
@@ -70,7 +70,7 @@ def dynamic_programming(rover: MarsRover, time:int,
     return value
 
 
-def iterative(rover: MarsRover, epsilon: float, 
+def iterative(rover: MarsRover, epsilon: float,
               gamma: float) -> List[float]:
     inf = [float("inf")]*len(rover.state_space)
     value = np.array(inf)
